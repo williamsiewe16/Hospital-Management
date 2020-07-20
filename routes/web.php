@@ -11,25 +11,22 @@
 |
 */
 
-
-Route::get('/','controller1@getForm')->name("accueil");
-Route::get('/add','controller1@getFormAdd')->name("formulaire");
-Route::post('/add','controller1@postFormAdd')->name("ajout");
-
-Route::get('/{n}',function($n){
-    return redirect()->route('accueil');
+Route::get('/test', function(){
+   return "google";
 });
 
-/*Route::get('/add', function () {
-    return view('ajouter');
-})->name("add");*/
+/** get views */
+Route::redirect('/','/login');
+Route::get('/login','MachineController@getLoginForm')->name("loginForm");
+Route::get('/machines','MachineController@getAllMachines')->name("machines");
+Route::get('/add-machine','MachineController@displayFormAddMachine')->name("addMachineForm");
+Route::get('/update-machine/{id}','MachineController@displayFormUpdateMachine')->name("updateMachineForm")->where('id','[0-9]');
 
-/*Route::get('etage/{id?}', function ($id = 0) {
-    return "nous sommes à l'étage ".$id;
-})->where('id','[1-3]');
+/** post routes */
+Route::post('/login','MachineController@login')->name("login");
+Route::post('/add-machine','MachineController@addMachine')->name("addMachine");
+Route::post('/update-machine','MachineController@updateMachine')->name("updateMachine");
+Route::post('/delete-machine','MachineController@deleteMachine')->name("deleteMachine");
 
-Route::redirect('/autres','/sale chat');
-
-Route::get('user/profile', function () {
-    return redirect("/");
-})->name('profile');*/
+/** logout */
+Route::get('/logout','MachineController@logout')->name("logout");
