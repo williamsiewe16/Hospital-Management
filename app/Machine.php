@@ -12,4 +12,12 @@ class Machine extends Model
     ];
 
     public $timestamps = false;
+
+    public function provider (){
+        return $this->belongsTo("App\Provider");
+    }
+
+    public function maintainers (){
+        return $this->belongsToMany("App\Maintainer")->withPivot(["date"]);
+    }
 }

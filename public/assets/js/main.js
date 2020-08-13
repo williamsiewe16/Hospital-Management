@@ -4,7 +4,6 @@
 
     /* Maintenancier */
     $('.edit').on('click',function(){
-        alert('google')
         $("#maintainerModal").find('.modal-title').text("Modifier le maintenaincier")
         $("#maintainerForm").find('input[type="text"]').val($(this).parents('.profile-widget').find('.doctor-name').text())
         $("#maintainerForm").find('input[type="email"]').val($(this).parents('.profile-widget').find('.doc-prof').text())
