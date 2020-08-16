@@ -36,7 +36,13 @@ class MachineController extends Controller
 
     /** form for adding a machine */
     public function displayFormAddMachine(){
-        return view("machine");
+        $services = ["Service radiologie", "Service cardiologie", "Service ambulatoire", "Service réanimation"];
+        $origins = ["Don", "Achat"];
+
+        return view("machine",[
+            "services" => $services,
+            "origins" => $origins
+        ]);
     }
 
     /** add a machine
@@ -47,8 +53,9 @@ class MachineController extends Controller
     public function addMachine(Request $request){
 
         $requirements = [
-            "name" => ['required', 'max:255'], "model" => 'required', "function" => 'required',
-            "threat" => "required", "description" => 'required', "status" => 'required',
+            "name" => ['required', 'max:255'], "code" => ['required', 'max:255'], "service" => "required",
+            "cost" => "required", "origin" => "required", "expirationDate" => ["date"],
+             //"model" => 'required', "function" => 'required', "threat" => "required", "description" => 'required', "status" => 'required',
         ];
 
         Validator::make($request->all(),$requirements,[])->validate();
@@ -56,7 +63,6 @@ class MachineController extends Controller
         $machine = $request->toArray();
         unset($machine["_token"]);
         $machine["addDate"] = new \DateTime();
-        $machine["lastStatusUpdateDate"] = new \DateTime();
 
         Machine::create($machine);
         return redirect()->route('machines');
@@ -68,7 +74,14 @@ class MachineController extends Controller
      */
     public function displayFormUpdateMachine($id){
         $machine = Machine::find($id);
-        return view("machine",compact("machine"))->with('id',$id);
+        $services = ["Service radiologie", "Service cardiologie", "Service ambulatoire", "Service réanimation"];
+        $origins = ["Don", "Achat"];
+
+        return view("machine",[
+            "machine" => $machine,
+            "services" => $services,
+            "origins" => $origins
+        ]);
     }
 
     /** update a machine
@@ -79,8 +92,9 @@ class MachineController extends Controller
     public function updateMachine(Request $request){
 
         $requirements = [
-            "name" => ['required', 'max:255'], "model" => 'required', "function" => 'required',
-            "threat" => "required", "description" => 'required', "status" => 'required',
+            "name" => ['required', 'max:255'], "code" => ['required', 'max:255'], "service" => "required",
+            "cost" => "required", "origin" => "required", "expirationDate" => ["date"],
+            //"model" => 'required', "function" => 'required', "threat" => "required", "description" => 'required', "status" => 'required',
         ];
 
         Validator::make($request->all(),$requirements,[])->validate();
@@ -88,11 +102,10 @@ class MachineController extends Controller
         $machine = $request->toArray();
         unset($machine["_token"]);
 
-        $currentStatus = Machine::find($request->id)->status;
-        if($currentStatus != $request->status) $machine["lastStatusUpdateDate"] = new \DateTime();
 
-        Machine::where('id',$request->id)
-                 ->update($machine);
+        $machine = Machine::where('id',$request->id)
+            ->update($machine);
+
         return redirect()->route('machines');
     }
 

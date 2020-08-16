@@ -18,54 +18,57 @@
                     @csrf
                     <div class="row">
 
-                        @if(isset($id))
-                            <input type="hidden" name="id" value="{{$id}}"/>
+                        @if(isset($machine))
+                            <input type="hidden" name="id" value="{{$machine->id}}"/>
                         @endif
 
-                        <!-- Nom -->
+                            <!-- Nom -->
                         <div class="form-group col-sm-6">
                             <label for="name">Nom</label>
                             <input class="form-control" type="text" name="name" id="name" required value="{{$machine->name ?? ""}}"/>
                             <span class="error">{{$errors->first("name") ?? ""}}</span>
                         </div>
 
-                        <!-- Modèle -->
+                            <!-- Code -->
                         <div class="form-group col-sm-6">
-                            <label for="model">Modèle</label>
-                            <input class="form-control" type="text" name="model" id="model" required value="{{$machine->model ?? ""}}"/>
-                            <span class="error">{{$errors->first("model") ?? ""}}</span>
+                            <label for="code">Code</label>
+                            <input class="form-control" type="text" name="code" id="code" required value="{{$machine->code ?? ""}}"/>
+                            <span class="error">{{$errors->first("code") ?? ""}}</span>
                         </div>
 
-                        <!-- Fonction -->
-                        <div class="form-group col-sm-6">
-                            <label for="function">Fonction</label>
-                            <input class="form-control" type="text" name="function" id="function" required value="{{$machine->function ?? ""}}"/>
-                            <span class="error">{{$errors->first("function") ?? ""}}</span>
-                        </div>
-
-                        <!-- Menace -->
-                        <div class="form-group col-sm-6">
-                            <label for="threat">Menace</label>
-                            <input class="form-control" type="text" name="threat" id="threat" required value="{{$machine->threat ?? ""}}"/>
-                            <span class="error">{{$errors->first("threat") ?? ""}}</span>
-                        </div>
-
-                        <!-- Etat -->
-                        <div class="form-group col-sm-6">
-                            <label for="status">Etat</label>
-                            <select name="status" id="status" class="form-control" nowStatus="{{$machine->status ?? ""}}">
-                                <option value="1">En marche</option>
-                                <option value="-1">Défectueux</option>
-                                <option value="0">En maintenance</option>
+                            <!-- Service d'exploitation -->
+                         <div class="form-group col-sm-6">
+                            <label for="status">Service d'exploitation</label>
+                            <select name="service" id="service" class="form-control" nowStatus="{{$machine->service ?? ""}}">
+                                @foreach($services ?? '' as $service)
+                                   <option value="{{$service}}">{{$service}}</option>
+                                @endforeach
                             </select>
                         </div>
 
-                        <!-- Description -->
-                        <div class="form-group col-sm-6">
-                            <label for="description">Description</label>
-                            <textarea rows="5" class="form-control" type="text" name="description" id="description" required>{{$machine->description ?? ""}}</textarea>
-                            <span class="error">{{$errors->first("description") ?? ""}}</span>
-                        </div>
+                            <!-- Prix -->
+                            <div class="form-group col-sm-6">
+                                <label for="cost">Prix <i style="font-size: 0.8em">(en FCFA)</i></label>
+                                <input class="form-control" type="text" name="cost" id="cost" required value="{{$machine->cost ?? ""}}"/>
+                                <span class="error">{{$errors->first("cost") ?? ""}}</span>
+                            </div>
+
+                            <!-- Provenance -->
+                            <div class="form-group col-sm-6">
+                                <label for="origin">Provenance</label>
+                                <select name="origin" id="origin" class="form-control" nowStatus="{{$machine->origin ?? ""}}">
+                                    @foreach($origins ?? '' as $origin)
+                                        <option value="{{$origin}}">{{$origin}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <!-- Date d'expiration -->
+                            <div class="form-group col-sm-6">
+                                <label for="expirationDate">Date d'expiration</label>
+                                <input class="form-control" type="date" name="expirationDate" id="expirationDate" value="{{$machine->expirationDate ?? ""}}"/>
+                                <span class="error">{{$errors->first("expirationDate") ?? ""}}</span>
+                            </div>
 
                     </div>
                     <div class="m-t-20 text-center">

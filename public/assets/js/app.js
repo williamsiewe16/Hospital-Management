@@ -187,12 +187,17 @@ $(document).ready(function($) {
       else alert('The search field must not be empty')
     })
 
-	$('.date').attr("value",new Date().toISOString().substr(0,10))
+	//$('.date').attr("value",new Date().toISOString().substr(0,10))
 
-    let status = $('select[name="status"]')
-    let nowStatus = status.attr('nowStatus')
-
-    if(nowStatus != "") status.val(nowStatus);
+    let tab = ["service", "origin"]
+    tab.forEach(val => {
+        let elt = $('select[name="'+val+'"]')
+        let nowStatus = elt.attr('nowStatus')
+        if(nowStatus != ""){
+            if(elt.attr("type") != "date") elt.val(nowStatus);
+            else elt.val(new Date(nowStatus));
+        }
+    })
 
 	// Bootstrap Tooltip
 	if($('[data-toggle="tooltip"]').length > 0) {

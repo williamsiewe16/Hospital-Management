@@ -23,13 +23,16 @@
                         <tr>
                             <th>#</th>
                             <th>Nom</th>
-                            <th>Modèle</th>
-                            <th>Fonction</th>
-                            <th>Menace</th>
+                            <th>Code</th>
+                           <!-- <th>Modèle</th> -->
+                            <th>Service d'exploitation</th>
+                          <!--  <th>Menace</th>
                             <th>Description</th>
-                            <th>Etat</th>
+                            <th>Etat</th> -->
+                            <th>Prix</th>
+                            <th>Provenance</th>
                             <th>Date d'ajout</th>
-                            <th>Dernière modification d'état</th>
+                            <th>Date d'expiration</th>
                             <th class="text-right">Action</th>
                         </tr>
                         </thead>
@@ -39,20 +42,19 @@
                             <input type="hidden" name="id" value="{{$machine->id}}"/>
                             <th >{{$key+1}}</th>
                             <td >{{$machine->name}}</td>
-                            <td >{{$machine->model}}</td>
-                            <td >{{$machine->function}}</td>
-                            <td >{{$machine->threat}}</td>
-                            <td >{{$machine->description}}</td>
-                            <td >{{ $machine->status ==1 ? "En marche" : ($machine->status ==0 ? "En maintenance" : "Défectueux")}}</td>
+                            <td >{{$machine->code}}</td>
+                            <td >{{$machine->service}}</td>
+                            <td >{{$machine->cost}}</td>
+                            <td >{{$machine->origin}}</td>
                             <td >{{$machine->addDate}}</td>
-                            <td >{{$machine->lastStatusUpdateDate}}</td>
+                            <td >{{$machine->expirationDate}}</td>
                             <td class="text-right">
                                 <div class="dropdown dropdown-action">
                                     <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                                     <div class="dropdown-menu dropdown-menu-right menu_">
-                                        <a class="dropdown-item" href="/update-machine/{{$machine->id}}"><i class="fa fa-pencil m-r-5"></i>Edit</a>
-                                        <a class="dropdown-item" href="/update-machine/{{$machine->id}}"><i class="fa fa-pencil m-r-5"></i>Edit</a>
-                                        <a class="dropdown-item" href="#" data-toggle="modal" data-target='#deleteModal'><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                        <a class="dropdown-item view-machine" href="#" data-toggle="modal" data-target='#viewModal'><i class="fa fa-eye m-r-5"></i>Voir la Fiche</a>
+                                        <a class="dropdown-item edit-machine" href="/update-machine/{{$machine->id}}"><i class="fa fa-pencil m-r-5"></i>Modifier</a>
+                                        <a class="dropdown-item delete-machine" href="#" data-toggle="modal" data-target='#deleteModal'><i class="fa fa-trash-o m-r-5"></i>Supprimer</a>
                                     </div>
                                 </div>
                             </td>
