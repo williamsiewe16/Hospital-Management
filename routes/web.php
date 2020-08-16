@@ -23,7 +23,6 @@ Route::get('/add-machine','MachineController@displayFormAddMachine')->name("addM
 Route::get('/update-machine/{id}','MachineController@displayFormUpdateMachine')->name("updateMachineForm")->where('id','[0-9]');
 
 Route::get('/maintainers','MaintainerController@getAllMaintainers')->name("maintainers");
-Route::get('/maintainer/{id}','MaintainerController@getMaintainer')->name("maintainer");
 
 /** post routes */
 Route::post('/login','MachineController@login')->name("login");
@@ -32,7 +31,7 @@ Route::post('/update-machine','MachineController@updateMachine')->name("updateMa
 Route::post('/delete-machine','MachineController@deleteMachine')->name("deleteMachine");
 
 Route::post('/add-maintainer','MaintainerController@addMaintainer')->name("addMaintainer");
-Route::post('/update-maintainer','MaintainerController@updateMaintainer')->name("updateMaintainer");
+Route::post('/update-maintainer/{id}','MaintainerController@updateMaintainer')->name("updateMaintainer");
 Route::post('/delete-maintainer','MaintainerController@deleteMaintainer')->name("deleteMaintainer");
 
 /** logout */

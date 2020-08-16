@@ -21,22 +21,24 @@
             </div>
         </div>
         <div class="row doctor-grid">
+            @foreach($maintainers as $key => $maintainer)
             <div class="col-md-4 col-sm-4  col-lg-3">
-                <div class="profile-widget" data-id="">
+                <div class="profile-widget" data-id="{{$maintainer->id}}">
                     <div class="doctor-img">
-                        <a class="avatar" href=""><img alt="user" src="assets/images/user.jpg" /></a>
+                        <a class="avatar" href="#"><img alt="user" src="assets/images/user.jpg" /></a>
                     </div>
                     <div class="dropdown profile-action">
-                        <a href="" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+                        <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a class="dropdown-item edit" data-toggle="modal" data-target="#maintainerModal" style="cursor: pointer"><i class="fa fa-edit m-r-5"></i> Modifier</a>
                             <a class="dropdown-item delete" style="cursor: pointer"><i class="fa fa-trash-o m-r-5"></i> Supprimer</a>
                         </div>
                     </div>
-                    <h4 class="doctor-name text-ellipsis"><a href=""></a></h4>
-                    <div class="doc-prof"></div>
+                    <div class="doctor-name text-ellipsis" style="color: black"><a>{{$maintainer->name}}</a></div>
+                    <div class="doc-prof">{{$maintainer->expertise." (".$maintainer->status.")"}}</div>
                 </div>
             </div>
+                @endforeach
         </div>
     </div>
     <div id="snackbar"></div>
@@ -47,24 +49,42 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle"></h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle" style="font-weight: bold; color: black"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form id="maintainerForm" method="post" action="">
+                        @csrf
                         <input value="<%= token %>" name="token" type="hidden" required/>
+                         <!-- Nom -->
                         <div>
-                            <label for="username">Username</label>
-                            <input id="username" type="text" name="username" class="form-control" required/>
+                            <label for="name" style="color: black">Nom</label>
+                            <input id="name" type="text" name="name" class="form-control" required/>
                         </div>
+
+                        <!-- Statut -->
                         <div>
-                            <label for="email">Email</label>
-                            <input id="email" type="email" name="email" class="form-control" required/>
+                            <label for="status" style="color: black">Statut</label>
+                            <select id="status" name="status" class="form-control" required>
+                                @foreach($statuses as $status)
+                                    <option value="{{$status}}">{{$status}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Domaine de compétence -->
+                        <div>
+                            <label for="expertise" style="color: black">Domaine de compétence</label>
+                            <select id="expertise" name="expertise" class="form-control" required>
+                                @foreach($expertises as $expertise)
+                                <option value="{{$expertise}}">{{$expertise}}</option>
+                                    @endforeach
+                            </select>
                         </div>
                         <div style="display: flex; justify-content: flex-end; align-items: center" class="m-t-20">
-                            <img src="../../src/assets/images/2.gif" style="display: none" id="loading"/>
+                            <div id="loading" class="spinner-border spinner-border-sm" style="margin-right: 5px; display: none"></div>
                             <input type="submit" value="valider" class="btn btn-primary"/>
                         </div>
                     </form>

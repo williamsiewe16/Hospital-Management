@@ -3,10 +3,12 @@
     "use strict"
 
     /* Maintenancier */
-    $('.edit').on('click',function(){
-        $("#maintainerModal").find('.modal-title').text("Modifier le maintenaincier")
+    $(".doctor-grid").on('click','.edit',function(){
+        $("#maintainerModal").find('.modal-title').text("Modifier le maintenancier")
         $("#maintainerForm").find('input[type="text"]').val($(this).parents('.profile-widget').find('.doctor-name').text())
-        $("#maintainerForm").find('input[type="email"]').val($(this).parents('.profile-widget').find('.doc-prof').text())
+        let tab = $(this).parents('.profile-widget').find('.doc-prof').text().split("(")
+        $("#status").val(tab[1].trim().substring(0,tab[1].indexOf(")")))
+        $("#expertise").val(tab[0].trim())
 
         let a = $('input[name="id"]')
         if(a.length != 0) a.remove()
@@ -15,7 +17,7 @@
     })
 
     $('.add').on('click',function(){
-        $("#maintainerModal").find('.modal-title').text("Ajouter un maintenaincier")
+        $("#maintainerModal").find('.modal-title').text("Ajouter un maintenancier")
         $('.form-control').val('')
         let a = $('input[name="id"]')
         if(a.length != 0) a.remove()
@@ -26,58 +28,94 @@
         let data = $(this).serialize()
         let a = $('input[name="id"]')
 
-        let url = a.length != 0 ? `/app/admin/advertisers/${a.val()}` : `/app/admin/advertisers`
+        let url = a.length != 0 ? `/update-maintainer/${a.val()}` : `/add-maintainer`
         $("#loading").show()
-        Ajax(url,function(data){
-            data = JSON.parse(data), $("#loading").hide(), $("#maintainerModal").find("span[aria-hidden='true']").click();
+        $.ajax({
+            url:url, type: "POST",
+            dataType:"json",
+            data: data,
+            success: function(data,statut){
+                $("#loading").hide(), $("#maintainerModal").find("span[aria-hidden='true']").click();
 
-            if(a.length != 0){
-                $('.profile-widget[data-id='+a.val()+']').find('.doctor-name').text(data.username)
-                $('.profile-widget[data-id='+a.val()+']').find('.doc-prof').text(data.email)
-            }else{
-                if(data.error == undefined) $(".doctor-grid").append(generateAdvertiser(data))
+                if(a.length != 0) {
+                    $('.profile-widget[data-id='+a.val()+']').find('.doctor-name').text(data.name)
+                    $('.profile-widget[data-id='+a.val()+']').find('.doc-prof').text(data.expertise + " (" + data.status + ")")
+                } else {
+                    if(data.error == undefined) $(".doctor-grid").append(generateMaintainer(data))
+                }
+
+                if(data.error == undefined) showSnackbar("success","green","1500")
+                else showSnackbar(data.error,"red","1500")
+            },
+            error: function(data,statut){
+             //   console.log(data.responseJSON.errors)
+                $("#loading").hide()
+                showSnackbar("error","red","1500")
             }
-
-            if(data.error == undefined) showSnackbar("success","green","1500")
-            else showSnackbar(data.error,"red","1500")
-
-        },() => {showSnackbar("error","red","1500")},data,"POST")
+        });
     })
 
-    $(".delete").on("click",function(e){
-        swal({text: "Voulez-vous vraiment supprimer cet annonceur? ",
+    $(".doctor-grid").on("click",".delete",function(e){
+        swal({text: "Voulez-vous vraiment supprimer ce maintenancier? ",
             buttons: { supprimer: {closeModal: false}, fermer: "cancel"}})
             .then((change) => {
-                if(change == null) throw null;
+                if(change == "fermer") throw null;
                 else{
-                    return  $.ajax({url: `/app/admin/advertiser/${$(this).parents(".profile-widget").data("id")}?token=${$('input[name="token"]').val()}`, type: "GET", dataType:"text"})
-                }})
+                    return  $.ajax({
+                        url: `/delete-maintainer`,
+                        type: "POST", headers: {"X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")},
+                        data: {
+                            id: $(this).parents(".profile-widget").data("id")
+                        },
+                        dataType:"json"
+                    })
+                }
+            })
             .then((response) => {
-                if (response == "no token") window.location.href = "/app/login"
+                console.log(response)
+                if (response.message == "no token") window.location.href = "/maintainers"
                 swal({text: "Opération effectuée", icon: "success"});
-                setTimeout(() => window.location.href = "/app/admin/advertisers", 1000)})
+                setTimeout(() => window.location.href = "/maintainers", 1000)
+            })
             .catch(err => {
+                console.log(err)
                 if(err) swal({text: "une erreur est survenue", icon: "error"});
                 swal.stopLoading();
-                swal.close()})
+                swal.close()
+            })
     })
 
+
+    /* let settings = {
+      "async": true,
+      "crossDomain": true,
+      "url": "https://weatherbit-v1-mashape.p.rapidapi.com/current?lang=en&lon=%3Crequired%3E&lat=%3Crequired%3E",
+      "method": "GET",
+      "headers": {
+          "x-rapidapi-host": "weatherbit-v1-mashape.p.rapidapi.com",
+          "x-rapidapi-key": "e54a81af0cmshb63201ac97d9f5dp141071jsn84a38fc53e74"
+      }
+  }
+
+  $.ajax(settings).done(function (response) {
+      console.log(response);
+  });*/
 
     function generateMaintainer(maintainer){
         let a = "<div class=\"col-md-4 col-sm-4  col-lg-3\">\n" +
-            `                   <div class=\"profile-widget\" data-id=\"${advertiser._id}\">\n` +
+            `                   <div class=\"profile-widget\" data-id=\"${maintainer.id}\">\n` +
             "                       <div class=\"doctor-img\">\n" +
-            "                           <a class=\"avatar\" href=\"#\"><img alt=\"user\" src=\"/src/assets/images/user.jpg\" /></a>\n" +
+            "                           <a class=\"avatar\" href=\"#\"><img alt=\"user\" src=\"/assets/images/user.jpg\" /></a>\n" +
             "                       </div>\n" +
             "                       <div class=\"dropdown profile-action\">\n" +
-            "                           <a href=\"#\" class=\"action-icon dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa fa-ellipsis-v\"></i></a>\n" +
+            "                           <a class=\"action-icon dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\"><i class=\"fa fa-ellipsis-v\"></i></a>\n" +
             "                           <div class=\"dropdown-menu dropdown-menu-right\">\n" +
-            "                               <a class=\"dropdown-item edit\" data-toggle=\"modal\" data-target=\"#advertiserModal\" style=\"cursor: pointer\"><i class=\"far fa-edit m-r-5\"></i> Modifier</a>\n" +
-            "                               <a class=\"dropdown-item\" style=\"cursor: pointer\"><i class=\"fas fa-trash m-r-5\"></i> Supprimer</a>\n" +
+            "                               <a class=\"dropdown-item edit\" data-toggle=\"modal\" data-target=\"#maintainerModal\" style=\"cursor: pointer\"><i class=\"fa fa-edit m-r-5\"></i> Modifier</a>\n" +
+            "                               <a class=\"dropdown-item delete\" style=\"cursor: pointer\"><i class=\"fa fa-trash-o m-r-5\"></i> Supprimer</a>\n" +
             "                           </div>\n" +
             "                       </div>\n" +
-            `                       <h4 class=\"doctor-name text-ellipsis\"><a href=\"profile.html\">${advertiser.username}</a></h4>\n` +
-            `                       <div class=\"doc-prof\">${advertiser.email}</div>\n` +
+            `                       <div class=\"doctor-name text-ellipsis\" style=\"color: black\"><a>${maintainer.name}</a></div>\n` +
+            `                       <div class=\"doc-prof\">${maintainer.expertise} (${maintainer.status})</div>\n` +
             "                   </div>\n" +
             "               </div>"
         return a

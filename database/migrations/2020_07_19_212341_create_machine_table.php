@@ -16,13 +16,17 @@ class CreateMachineTable extends Migration
         Schema::create('machines', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
-            $table->string('model');
+            $table->string('code');
+            $table->string('service');
+           /* $table->string('model');
             $table->string('function');
             $table->string('threat');
-            $table->integer('status');
-            $table->string('description');
+            $table->integer('status');*/
+            $table->integer('cost');
+            $table->string('origin');
             $table->dateTime('addDate');
-            $table->dateTime('lastStatusUpdateDate');
+            $table->dateTime('expirationDate');
+           /* $table->dateTime('lastStatusUpdateDate');*/
         });
     }
 
@@ -33,6 +37,6 @@ class CreateMachineTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('machine');
+        Schema::dropIfExists('machines');
     }
 }

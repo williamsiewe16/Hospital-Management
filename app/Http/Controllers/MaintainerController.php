@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\MachineRequest;
 use App\Machine;
+use App\Maintainer;
+use DemeterChain\Main;
 use Exception;
+use http\Env\Response;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,15 +17,22 @@ use Illuminate\View\View;
 class MaintainerController extends Controller
 {
 
-    /** get the list of all machines */
+    /** get the list of all maintainers */
     public function getAllMaintainers(){
-        $machines = Machine::all();
-        return view("maintainers", compact('machines'));
+        $maintainers = Maintainer::all();
+        $statuses = ["Interne", "Externe"];
+        $expertises = ["Electronique", "Electricité industrielle", "Automatisme"];
+
+        return view("maintainers",[
+            "statuses" => $statuses,
+            "expertises" => $expertises,
+            "maintainers" =>  $maintainers
+        ]);
     }
 
     /** get a maintainer */
     public function getMaintainer(){
-        $machines = Machine::all();
+        $maintainer = Maintainer::all();
         return view("maintainer", compact('machines'));
     }
 
@@ -30,47 +40,43 @@ class MaintainerController extends Controller
     public function addMaintainer(Request $request){
 
         $requirements = [
-            "name" => ['required', 'max:255'], "model" => 'required', "function" => 'required',
-            "threat" => "required", "description" => 'required', "status" => 'required',
+            "name" => ['required', 'max:255']
         ];
 
         Validator::make($request->all(),$requirements,[])->validate();
 
-        $machine = $request->toArray();
-        unset($machine["_token"]);
-        $machine["addDate"] = new \DateTime();
-        $machine["lastStatusUpdateDate"] = new \DateTime();
+        $maintainer = $request->toArray();
+        unset($maintainer["_token"]); unset($maintainer["token"]);
+        Maintainer::create($maintainer);
 
-        Machine::create($machine);
-        return redirect()->route('machines');
+        return Maintainer::all()->last(); //$maintainerCreated->first();
+
     }
 
     public function updateMaintainer(Request $request){
 
         $requirements = [
-            "name" => ['required', 'max:255'], "model" => 'required', "function" => 'required',
-            "threat" => "required", "description" => 'required', "status" => 'required',
+            "name" => ['required', 'max:255'],
         ];
 
         Validator::make($request->all(),$requirements,[])->validate();
 
-        $machine = $request->toArray();
-        unset($machine["_token"]);
-        $machine["addDate"] = new \DateTime();
-        $machine["lastStatusUpdateDate"] = new \DateTime();
+        $newMaintainer = $request->toArray();
+        unset($newMaintainer["_token"]); unset($newMaintainer["token"]);
 
-        Machine::create($machine);
-        return redirect()->route('machines');
+        Maintainer::where("id",$request->id)->update($newMaintainer);
+
+        return $newMaintainer;
     }
 
 
-    /** delete a machine
+    /** delete a maintainer
      * @param Request $request
      * @return RedirectResponse
      */
     public function deleteMaintainer(Request $request){
-        Machine::destroy($request->id);
-        return redirect()->route('machines');
+        Maintainer::destroy($request->id);
+        return response()->json(["message" => "success"]);
     }
 
 

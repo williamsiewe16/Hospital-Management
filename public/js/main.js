@@ -27,7 +27,7 @@
         let data = $(this).serialize()
         let a = $('input[name="id"]')
 
-        let url = a.length != 0 ? `/app/admin/advertisers/${a.val()}` : `/app/admin/advertisers`
+        let url = a.length != 0 ? `/add-maintainer/${a.val()}` : `/add-maintainer`
         $("#loading").show()
         Ajax(url,function(data){
             data = JSON.parse(data), $("#loading").hide(), $("#maintainerModal").find("span[aria-hidden='true']").click();
@@ -36,7 +36,8 @@
                 $('.profile-widget[data-id='+a.val()+']').find('.doctor-name').text(data.username)
                 $('.profile-widget[data-id='+a.val()+']').find('.doc-prof').text(data.email)
             }else{
-                if(data.error == undefined) $(".doctor-grid").append(generateAdvertiser(data))
+                console.log(data.error)
+                if(data.error == undefined) $(".doctor-grid").append(generateMaintainer(data))
             }
 
             if(data.error == undefined) showSnackbar("success","green","1500")
@@ -63,6 +64,20 @@
                 swal.close()})
     })
 
+    /* let settings = {
+      "async": true,
+      "crossDomain": true,
+      "url": "https://weatherbit-v1-mashape.p.rapidapi.com/current?lang=en&lon=%3Crequired%3E&lat=%3Crequired%3E",
+      "method": "GET",
+      "headers": {
+          "x-rapidapi-host": "weatherbit-v1-mashape.p.rapidapi.com",
+          "x-rapidapi-key": "e54a81af0cmshb63201ac97d9f5dp141071jsn84a38fc53e74"
+      }
+  }
+
+  $.ajax(settings).done(function (response) {
+      console.log(response);
+  });*/
 
     function generateMaintainer(maintainer){
         let a = "<div class=\"col-md-4 col-sm-4  col-lg-3\">\n" +
