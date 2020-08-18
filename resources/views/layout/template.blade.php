@@ -86,6 +86,26 @@
     </div>
     <!-- DeleteModel -->
 
+    <!-- ViewModal -->
+    <div id="viewModal" class="modal fade view-modal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                @yield("viewModalContent")
+            </div>
+        </div>
+    </div>
+    <!-- ViewModal -->
+
+    <!-- MaintenanceModal -->
+    <div id="maintenanceModal" class="modal fade maintenance-modal" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                @yield("maintenanceModalContent")
+            </div>
+        </div>
+    </div>
+    <!-- MaintenanceModal -->
+
 </div>
 
 
@@ -101,5 +121,6 @@
    <script src="/assets/js/app.js"></script>
    <script src="/assets/js/main.js"></script>
    <script src="/assets/js/sweetalert.min.js"></script>
+   <script src="/assets/js/jquery.steps.js"></script>
 </body>
 </html>

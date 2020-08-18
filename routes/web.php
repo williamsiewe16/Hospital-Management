@@ -27,12 +27,17 @@ Route::get('/maintainers','MaintainerController@getAllMaintainers')->name("maint
 /** post routes */
 Route::post('/login','MachineController@login')->name("login");
 Route::post('/add-machine','MachineController@addMachine')->name("addMachine");
+Route::post('/machine-provider','MachineController@getMachineProvider')->name("machineProvider");
 Route::post('/update-machine','MachineController@updateMachine')->name("updateMachine");
 Route::post('/delete-machine','MachineController@deleteMachine')->name("deleteMachine");
 
 Route::post('/add-maintainer','MaintainerController@addMaintainer')->name("addMaintainer");
 Route::post('/update-maintainer/{id}','MaintainerController@updateMaintainer')->name("updateMaintainer");
 Route::post('/delete-maintainer','MaintainerController@deleteMaintainer')->name("deleteMaintainer");
+
+Route::post('/maintenances','MaintainerController@getAllMaintenances')->name("maintenances");
+Route::post('/add-maintenance','MaintainerController@addMaintenance')->name("addMaintenance");
+Route::post('/delete-maintenance','MaintainerController@deleteMaintenance')->name("deleteMaintenance");
 
 /** logout */
 Route::get('/logout','MachineController@logout')->name("logout");

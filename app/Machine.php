@@ -8,7 +8,7 @@ class Machine extends Model
 {
 
     protected $fillable = [
-        "id", "code", "name",  "service", /*"function", "threat", "description", "status",*/ "cost", "origin", "addDate", "expirationDate" //"lastStatusUpdateDate"
+        "id", "code", "name",  "service", /*"function", "threat", "description", "status",*/ "cost", "origin", "provider_id", "addDate", "expirationDate" //"lastStatusUpdateDate"
     ];
 
     public $timestamps = false;

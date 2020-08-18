@@ -9,13 +9,14 @@
     <div class="content">
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
-                <h4 class="page-title">{{isset($machine) ? 'Modifier la machine' : 'Ajouter une machine'}}</h4>
+                <h3 class="page-title" style="color: black">{{isset($machine) ? 'Modifier la machine' : 'Ajouter une machine'}}</h3>
             </div>
         </div>
         <div class="row">
             <div class="col-lg-8 offset-lg-2">
                 <form method="post" action="{{isset($machine) ? '/update-machine' : '/add-machine'}}">
                     @csrf
+                    <h4 style="font-style: italic; color: black">* Informations générales</h4>
                     <div class="row">
 
                         @if(isset($machine))
@@ -69,6 +70,45 @@
                                 <input class="form-control" type="date" name="expirationDate" id="expirationDate" value="{{$machine->expirationDate ?? ""}}"/>
                                 <span class="error">{{$errors->first("expirationDate") ?? ""}}</span>
                             </div>
+
+                    </div>
+
+                    <br/>
+
+                    <h4 style="font-style: italic; color: black">* Fournisseur</h4>
+                    <div class="row">
+
+                        <!-- Nom -->
+                        <div class="form-group col-sm-6">
+                            <label for="providerName">Nom</label>
+                            <input class="form-control" type="text" name="providerName" id="providerName" required value="{{$machine->provider->name ?? ""}}"/>
+                            <span class="error">{{$errors->first("providerName") ?? ""}}</span>
+                        </div>
+
+                        <!-- Numero de contrat -->
+                        <div class="form-group col-sm-6">
+                            <label for="providerContractNumber">Numéro de contrat</label>
+                            <input class="form-control" type="text" name="providerContractNumber" id="providerContractNumber" required value="{{$machine->provider->contractNumber ?? ""}}"/>
+                            <span class="error">{{$errors->first("providerContractNumber") ?? ""}}</span>
+                        </div>
+
+                        <!-- Garantie -->
+                        <div class="form-group col-sm-6">
+                            <label for="providerWarranty">Garantie</label>
+                            <select class="form-control" name="providerWarranty" id="providerWarranty" required nowStatus="{{$machine->provider->warranty ?? ""}}">
+                                @foreach($warranties as $warranty)
+                                    <option value="{{$warranty}}">{{$warranty}}</option>
+                                @endforeach
+                            </select>
+                            <span class="error">{{$errors->first("providerWarranty") ?? ""}}</span>
+                        </div>
+
+                        <!-- Pays d'origine -->
+                        <div class="form-group col-sm-6">
+                            <label for="providernativeCountry">Pays d'origine</label>
+                            <input class="form-control" type="text" name="providerNativeCountry" id="providerNativeCountry" required value="{{$machine->provider->nativeCountry ?? ""}}"/>
+                                        <span class="error">{{$errors->first("providerNativeCountry") ?? ""}}</span>
+                        </div>
 
                     </div>
                     <div class="m-t-20 text-center">

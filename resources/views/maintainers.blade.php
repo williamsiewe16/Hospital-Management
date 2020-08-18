@@ -30,6 +30,8 @@
                     <div class="dropdown profile-action">
                         <a class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                         <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item allMaintenance" data-toggle="modal" data-target="#maintenanceModal" style="cursor: pointer"><i class="fa fa-eye m-r-5"></i> Historique des prestations </a>
+                            <a class="dropdown-item addMaintenance" data-toggle="modal" data-target="#maintenanceModal" style="cursor: pointer"><i class="fa fa-cogs m-r-5"></i> Ajouter une Maintenance</a>
                             <a class="dropdown-item edit" data-toggle="modal" data-target="#maintainerModal" style="cursor: pointer"><i class="fa fa-edit m-r-5"></i> Modifier</a>
                             <a class="dropdown-item delete" style="cursor: pointer"><i class="fa fa-trash-o m-r-5"></i> Supprimer</a>
                         </div>
@@ -108,5 +110,31 @@
             <a href="#" class="btn btn-white" data-dismiss="modal">Non</a>
             <button type="submit" class="btn btn-danger">Oui</button>
         </form>
+    </div>
+@endsection
+
+@section("maintenanceModalContent")
+    <div class="modal-header" style="text-align: center">
+        <h5 class="modal-title" id="maintenanceModalLabel" style="font-weight: bold"></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body text-center">
+        <form method="post" id="maintenanceForm" action="/add-maintenance">
+            @csrf
+            <input value="<%= token %>" name="token" type="hidden" required/>
+            <div>
+                <label for="code" style="color: black">Machine</label><br/>
+                <select name="code" id="code" class="form-control">
+                    @foreach($machines as $machine)
+                        <option value="{{$machine->code}}">{{$machine->name}} ( {{$machine->code}} )</option>
+                    @endforeach
+                </select>
+            </div><br/>
+            <button type="submit" class="btn btn-primary">Valider</button>
+        </form>
+        <div id="historic">
+        </div>
     </div>
 @endsection

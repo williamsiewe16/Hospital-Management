@@ -86,6 +86,102 @@
     })
 
 
+    $(".view-machine").on("click",function(){
+        $.ajax({
+            url: `/machine-provider`, dataType:"json",
+            type: "POST", data: {id: $(this).parents("tr").data("id")},
+            success: function(data){
+                Object.keys(data.machine).forEach(key => {
+                    let keys = ["id","provider_id","provider"]
+                    if(keys.indexOf(key) == -1) $("#"+key).val(data.machine[key])
+                })
+
+                Object.keys(data.provider).forEach(key => {
+                    $("#provider"+key.charAt(0).toUpperCase() + key.slice(1)).val(data.provider[key])
+                })
+            },
+            error: function(data){
+                console.log(data)
+            }
+        })
+    })
+
+    /* maintenance */
+
+    $('.addMaintenance').on('click',function(){
+        $("#maintenanceModal").find('.modal-title').text("Ajouter une maintenance")
+        $("#maintenanceForm").show(); $("#historic").hide();
+
+        let a = $('input[name="id"]')
+        if(a.length != 0) a.remove()
+        let id_input = $(`<input type='hidden' name='id' value='${$(this).parents('.profile-widget').data("id")}'>`)
+        $("#maintenanceForm").prepend(id_input)
+    })
+
+
+    $('.allMaintenance').on('click',function(){
+        $("#maintenanceModal").find('.modal-title').text("Historique des prestations")
+        $("#maintenanceForm").hide(); $("#historic").show(); $("#historic").attr("data-id",$(this).parents('.profile-widget').data("id"))
+
+        $.ajax({
+            url: `/maintenances`, dataType:"json",
+            type: "POST", data: {id: $(this).parents('.profile-widget').data("id")},
+            success: function(data){
+                let html = ""
+
+                data.forEach(maintenance => {
+                    html += `<div machineId='${maintenance.id}' date='${maintenance.pivot.date}' class='maintenance' style=\"display: flex; justify-content: space-between; align-items:center\">` +
+                        "                <div style=\"display: flex\">" +
+                        "                    <div style=\"display: flex; flex-direction: column; justify-content: center; align-items: center\">" +
+                        `                        <div class=\"text-primary\">${maintenance.name} (${maintenance.code})</div>` +
+                        `                        <div>${maintenance.pivot.date}</div> ` +
+                        "                    </div>" +
+                        "                </div>" +
+                        "               <i class=\"fa fa-trash-o deleteMaintenance\"></i>" +
+                        "            </div><br/>"
+                })
+
+                if(html == "") html = "aucune maintenance effectuée pour le moment"
+                $("#historic").html(html)
+            },
+            error: function(data){
+                console.log(data)
+            }
+        })
+    })
+
+    $('#historic').on('click',".deleteMaintenance",function(){
+        let parent = $(this).parents(".maintenance")
+        swal({text: "Voulez-vous vraiment supprimer cette maintenance? ",
+            buttons: { supprimer: {closeModal: false}, fermer: "cancel"}})
+            .then((change) => {
+                if(change == "fermer") throw null;
+                else{
+                    return   $.ajax({
+                        url: `/delete-maintenance`, dataType:"json",
+                        type: "POST", data: {
+                            id: $(this).parents('#historic').data("id"),
+                            machineId: $(this).parents(".maintenance").attr("machineId"),
+                            date: $(this).parents(".maintenance").attr("date")
+                        }})
+                }
+            })
+            .then((response) => {
+                console.log(response)
+                parent.next().remove()
+                parent.remove()
+                if (response.message == "no token") window.location.href = "/maintainers"
+                swal({text: "Opération effectuée", icon: "success"});
+               // setTimeout(() => window.location.href = "/maintainers", 1000)
+            })
+            .catch(err => {
+                console.log(err)
+                if(err) swal({text: "une erreur est survenue", icon: "error"});
+                swal.stopLoading();
+                swal.close()
+            })
+    })
+
     /* let settings = {
       "async": true,
       "crossDomain": true,

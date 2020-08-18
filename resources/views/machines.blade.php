@@ -38,7 +38,7 @@
                         </thead>
                         <tbody>
                         @foreach($machines as $key => $machine)
-                        <tr>
+                        <tr data-id="{{$machine->id}}">
                             <input type="hidden" name="id" value="{{$machine->id}}"/>
                             <th >{{$key+1}}</th>
                             <td >{{$machine->name}}</td>
@@ -84,3 +84,94 @@
         </form>
     </div>
     @endsection
+
+
+@section("viewModalContent")
+    <div class="modal-header" style="text-align: center">
+        <h5 class="modal-title" id="viewModalLabel"> Fiche de la machine </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body text-center">
+        <form method="post">
+                <h4 style="font-style: italic; color: black" class="text-primary">Informations générales</h4>
+                <div class="row">
+
+                <!-- Nom -->
+                    <div class="form-group col-sm-6">
+                        <label for="name">Nom</label>
+                        <input class="form-control" type="text" name="name" id="name" disabled/>
+                    </div>
+
+                    <!-- Code -->
+                    <div class="form-group col-sm-6">
+                        <label for="code">Code</label>
+                        <input class="form-control" type="text" name="code" id="code" disabled/>
+                    </div>
+
+                    <!-- Service d'exploitation -->
+                    <div class="form-group col-sm-6">
+                        <label for="status">Service d'exploitation</label>
+                        <input name="service" id="service" class="form-control" disabled />
+                    </div>
+
+                    <!-- Prix -->
+                    <div class="form-group col-sm-6">
+                        <label for="cost">Prix <i style="font-size: 0.8em">(en FCFA)</i></label>
+                        <input class="form-control" type="text" name="cost" id="cost" disabled />
+                    </div>
+
+                    <!-- Provenance -->
+                    <div class="form-group col-sm-6">
+                        <label for="origin">Provenance</label>
+                        <input name="origin" id="origin" class="form-control" disabled />
+                    </div>
+
+                    <!-- Date d'ajout -->
+                    <div class="form-group col-sm-6">
+                        <label for="addDate">Date d'ajout</label>
+                        <input class="form-control" type="text" name="addDate" id="addDate" disabled/>
+                    </div>
+
+                    <!-- Date d'expiration -->
+                    <div class="form-group col-sm-6">
+                        <label for="expirationDate">Date d'expiration</label>
+                        <input class="form-control" type="text" name="expirationDate" id="expirationDate" disabled/>
+                    </div>
+
+                </div>
+
+                <br/>
+
+                <h4 style="font-style: italic; color: black" class="text-primary">Fournisseur</h4>
+                <div class="row">
+
+                    <!-- Nom -->
+                    <div class="form-group col-sm-6">
+                        <label for="providerName">Nom</label>
+                        <input class="form-control" type="text" name="providerName" id="providerName" disabled />
+                    </div>
+
+                    <!-- Numero de contrat -->
+                    <div class="form-group col-sm-6">
+                        <label for="providerContractNumber">Numéro de contrat</label>
+                        <input class="form-control" type="text" name="providerContractNumber" id="providerContractNumber" disabled />
+                    </div>
+
+                    <!-- Garantie -->
+                    <div class="form-group col-sm-6">
+                        <label for="providerWarranty">Garantie</label>
+                        <input class="form-control" name="providerWarranty" id="providerWarranty" disabled/>
+                    </div>
+
+                    <!-- Pays d'origine -->
+                    <div class="form-group col-sm-6">
+                        <label for="providernativeCountry">Pays d'origine</label>
+                        <input class="form-control" type="text" name="providerNativeCountry" id="providerNativeCountry" disabled />
+                    </div>
+
+                </div>
+        </form>
+    </div>
+@endsection

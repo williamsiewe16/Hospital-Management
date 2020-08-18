@@ -14,6 +14,6 @@ class Maintainer extends Model
     public $timestamps = false;
 
     public function maintainedMachines (){
-        return $this->belongsToMany("App\Maintainer")->withPivot(["date"]);
+        return $this->belongsToMany("App\Machine")->withPivot(["date"]);
     }
 }

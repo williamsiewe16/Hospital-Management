@@ -11,6 +11,7 @@ use http\Env\Response;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
@@ -20,13 +21,15 @@ class MaintainerController extends Controller
     /** get the list of all maintainers */
     public function getAllMaintainers(){
         $maintainers = Maintainer::all();
+        $machines = Machine::all();
         $statuses = ["Interne", "Externe"];
         $expertises = ["Electronique", "Electricité industrielle", "Automatisme"];
 
         return view("maintainers",[
             "statuses" => $statuses,
             "expertises" => $expertises,
-            "maintainers" =>  $maintainers
+            "maintainers" =>  $maintainers,
+            "machines" =>  $machines
         ]);
     }
 
@@ -79,5 +82,35 @@ class MaintainerController extends Controller
         return response()->json(["message" => "success"]);
     }
 
+
+    /* Maintenances */
+
+
+    public function getAllMaintenances(Request $request){
+        return Maintainer::where("id",$request->id)->first()->maintainedMachines;
+    }
+
+    public function addMaintenance(Request $request){
+
+        $machine = Machine::where("code",$request->code)->first();
+        $maintainer = Maintainer::where("id",$request->id)->first();
+
+        $maintainer->maintainedMachines()->attach($machine->id,[
+            "date" => new \DateTime(),
+        ]);
+        return redirect()->route("maintainers");
+
+    }
+
+    public function deleteMaintenance(Request $request){
+        $maintainer = Maintainer::where("id",$request->id)->first();
+        /*$maintainer->maintainedMachines()->detach($request->input("machineId"),[
+            "date" => $request->input("date"),
+        ]);*/
+        DB::delete('delete from machine_maintainer where machine_id = ? AND maintainer_id = ? AND date = ?',[
+            $request->input("machineId"), $request->id, $request->input("date"),
+        ]);
+        return $request->all();
+    }
 
 }

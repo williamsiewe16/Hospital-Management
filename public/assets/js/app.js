@@ -189,7 +189,7 @@ $(document).ready(function($) {
 
 	//$('.date').attr("value",new Date().toISOString().substr(0,10))
 
-    let tab = ["service", "origin"]
+    let tab = ["service", "origin", "providerWarranty"]
     tab.forEach(val => {
         let elt = $('select[name="'+val+'"]')
         let nowStatus = elt.attr('nowStatus')
